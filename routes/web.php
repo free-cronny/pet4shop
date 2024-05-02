@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UsuarioController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::post('/usuarios', [UsuarioController::class, 'store']);
 });
 
 require __DIR__.'/auth.php';

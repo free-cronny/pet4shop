@@ -6,30 +6,41 @@ import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import SecondaryButton from "@/Components/SecondaryButton";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Dashboard({ auth }) {
-    const [users, setUsers] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [openModal, setOpenModal] = useState(false);
+    const [formData, setFormData] = useState({
+        nome: "",
+        email: "",
+        cpf: "",
+        telefone: "",
+        animal: "",
+        nome_animal: "",
+        raca_animal: "",
+        servico: ""
+    });
 
-    const getAllUsers = () => {
-        axios
-            .get("/users")
-            .then(function (response) {
-                // Manipule os dados retornados aqui
-                setUsers(response.data); // Exemplo: exibe os dados no console
-                setLoading(false);
-            })
-            .catch(function (error) {
-                console.error(error);
-                setLoading(false);
-            });
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
     };
 
-    useEffect(() => {
-        getAllUsers();
-    }, []);
+    const handleSubmit = () => {
+        axios
+            .post("/usuarios", formData)
+            .then((response) => {
+                console.log(response.data);
+                setOpenModal(false);
+                // Atualize os dados da lista de usuários ou faça uma nova chamada para atualizá-la
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     return (
         <AuthenticatedLayout
@@ -61,102 +72,100 @@ export default function Dashboard({ auth }) {
                                 </h1>
 
                                 <div>
-                                    <InputLabel  htmlFor="name" value="Nome:" />
-
+                                    <InputLabel htmlFor="nome" value="Nome:" />
                                     <TextInput
-                                        id="name"
-                                        name="name"
+                                        id="nome"
+                                        name="nome"
                                         className="mt-3 block w-full"
+                                        value={formData.nome}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
-                                    <InputLabel
-                                        htmlFor="email"
-                                        value="Email:"
-                                    />
-
+                                    <InputLabel htmlFor="email" value="Email:" />
                                     <TextInput
                                         id="email"
                                         name="email"
+                                        type="email"
                                         className="mt-3 block w-full"
+                                        value={formData.email}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
                                     <InputLabel htmlFor="cpf" value="CPF:" />
-
                                     <TextInput
                                         id="cpf"
                                         name="cpf"
                                         className="mt-3 block w-full"
+                                        value={formData.cpf}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
-                                    <InputLabel
-                                        htmlFor="phone"
-                                        value="Número de telefone:"
-                                    />
-
+                                    <InputLabel htmlFor="telefone" value="Número de telefone:" />
                                     <TextInput
-                                        id="phone"
-                                        name="phone"
+                                        id="telefone"
+                                        name="telefone"
                                         className="mt-3 block w-full"
+                                        value={formData.telefone}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
-                                    <InputLabel
-                                        htmlFor="nameanimal"
-                                        value="Animal:"
-                                    />
-
+                                    <InputLabel htmlFor="animal" value="Animal:" />
                                     <TextInput
-                                        id="nameanimal"
-                                        name="nameanimal"
+                                        id="animal"
+                                        name="animal"
                                         className="mt-3 block w-full"
+                                        value={formData.animal}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
-                                    <InputLabel
-                                        htmlFor="namepet"
-                                        value="Nome do Animal:"
-                                    />
-
+                                    <InputLabel htmlFor="nome_animal" value="Nome do Animal:" />
                                     <TextInput
-                                        id="namepet"
-                                        name="namepet"
+                                        id="nome_animal"
+                                        name="nome_animal"
                                         className="mt-3 block w-full"
+                                        value={formData.nome_animal}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="race" value="Raça:" />
-
+                                    <InputLabel htmlFor="raca_animal" value="Raça:" />
                                     <TextInput
-                                        id="race"
-                                        name="race"
+                                        id="raca_animal"
+                                        name="raca_animal"
                                         className="mt-3 block w-full"
+                                        value={formData.raca_animal}
+                                        onChange={handleChange}
                                     />
                                 </div>
 
                                 <div>
-                                    <InputLabel
-                                        htmlFor="service"
-                                        value="Serviço:"
-                                    />
-
+                                    <InputLabel htmlFor="servico" value="Serviço:" />
                                     <TextInput
-                                        id="service"
-                                        name="service"
+                                        id="servico"
+                                        name="servico"
                                         className="mt-3 block w-full"
+                                        value={formData.servico}
+                                        onChange={handleChange}
                                     />
                                 </div>
+
                                 <div className="flex flex-col items-center justify-center">
-                                    <SecondaryButton className="mt-7 bg-lime-500 hover:bg-green-700 text-white">
-                                        Novo Cliente
+                                    <SecondaryButton
+                                        className="mt-7 bg-lime-500 hover:bg-green-700 text-white"
+                                        onClick={handleSubmit}
+                                    >
+                                        Adicionar Novo Cliente
                                     </SecondaryButton>
                                 </div>
                             </ModalUser>
