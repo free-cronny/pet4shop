@@ -5,6 +5,7 @@ import ModalUser from "@/Components/ModalUser";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import SecondaryButton from "@/Components/SecondaryButton";
+import CardClient from "@/Components/CardClient";
 import axios from "axios";
 import { useState } from "react";
 
@@ -13,19 +14,19 @@ export default function Dashboard({ auth }) {
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
-        cpf: "",
+        cpf: 0,
         telefone: "",
         animal: "",
         nome_animal: "",
         raca_animal: "",
-        servico: ""
+        servico: "",
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         });
     };
 
@@ -83,7 +84,10 @@ export default function Dashboard({ auth }) {
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="email" value="Email:" />
+                                    <InputLabel
+                                        htmlFor="email"
+                                        value="Email:"
+                                    />
                                     <TextInput
                                         id="email"
                                         name="email"
@@ -99,6 +103,7 @@ export default function Dashboard({ auth }) {
                                     <TextInput
                                         id="cpf"
                                         name="cpf"
+                                        type="number"
                                         className="mt-3 block w-full"
                                         value={formData.cpf}
                                         onChange={handleChange}
@@ -106,7 +111,10 @@ export default function Dashboard({ auth }) {
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="telefone" value="Número de telefone:" />
+                                    <InputLabel
+                                        htmlFor="telefone"
+                                        value="Número de telefone:"
+                                    />
                                     <TextInput
                                         id="telefone"
                                         name="telefone"
@@ -117,7 +125,10 @@ export default function Dashboard({ auth }) {
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="animal" value="Animal:" />
+                                    <InputLabel
+                                        htmlFor="animal"
+                                        value="Animal:"
+                                    />
                                     <TextInput
                                         id="animal"
                                         name="animal"
@@ -128,7 +139,10 @@ export default function Dashboard({ auth }) {
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="nome_animal" value="Nome do Animal:" />
+                                    <InputLabel
+                                        htmlFor="nome_animal"
+                                        value="Nome do Animal:"
+                                    />
                                     <TextInput
                                         id="nome_animal"
                                         name="nome_animal"
@@ -139,7 +153,10 @@ export default function Dashboard({ auth }) {
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="raca_animal" value="Raça:" />
+                                    <InputLabel
+                                        htmlFor="raca_animal"
+                                        value="Raça:"
+                                    />
                                     <TextInput
                                         id="raca_animal"
                                         name="raca_animal"
@@ -150,7 +167,10 @@ export default function Dashboard({ auth }) {
                                 </div>
 
                                 <div>
-                                    <InputLabel htmlFor="servico" value="Serviço:" />
+                                    <InputLabel
+                                        htmlFor="servico"
+                                        value="Serviço:"
+                                    />
                                     <TextInput
                                         id="servico"
                                         name="servico"
@@ -169,6 +189,29 @@ export default function Dashboard({ auth }) {
                                     </SecondaryButton>
                                 </div>
                             </ModalUser>
+                            <div
+                                className="flex overflow-x-auto flex-wrap justify-center -m-1"
+                                style={{ scrollbarWidth: "thin" }}
+                            >
+                                <div className="m-1">
+                                    <CardClient />
+                                </div>
+                                <div className="m-1">
+                                    <CardClient />
+                                </div>
+                                <div className="m-1">
+                                    <CardClient />
+                                </div>
+                                <div className="m-1">
+                                    <CardClient />
+                                </div>
+                                <div className="m-1">
+                                    <CardClient />
+                                </div>
+                                <div className="m-1">
+                                    <CardClient />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
