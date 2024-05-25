@@ -27,8 +27,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::post('/usuarios', [UsuarioController::class, 'store']);
+
+    // ROTAS HTTP
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('users.index');
+    Route::post('/usuarios', [UsuarioController::class, 'store']);
+    Route::delete('/usuarios/{id}', [UsuarioController::class, 'delete']);
+
 });
 
 require __DIR__.'/auth.php';
+
