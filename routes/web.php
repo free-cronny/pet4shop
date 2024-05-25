@@ -33,6 +33,13 @@ Route::middleware('auth')->group(function () {
 
     // get all services
     Route::get('/services', [ServiceController::class, 'getAllServices']);
+
+    // ROTAS HTTP
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('users.index');
+    Route::post('/usuarios', [UsuarioController::class, 'store']);
+    Route::delete('/usuarios/{id}', [UsuarioController::class, 'delete']);
+
 });
 
 require __DIR__.'/auth.php';
+
