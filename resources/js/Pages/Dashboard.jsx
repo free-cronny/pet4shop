@@ -7,9 +7,10 @@ import TextInput from "@/Components/TextInput";
 import SecondaryButton from "@/Components/SecondaryButton";
 import CardClient from "@/Components/CardClient";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Dashboard({ auth }) {
+    const [clientes, setClientes] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [formData, setFormData] = useState({
         nome: "",
@@ -21,6 +22,26 @@ export default function Dashboard({ auth }) {
         raca_animal: "",
         servico: "",
     });
+
+    const users = async () => {
+        const url = "http://localhost:8000/usuarios";
+        try {
+            const response = await fetch(url);
+            const clientes = await response.json();
+            setClientes(clientes);
+
+            console.log(clientes);
+        } catch (error) {
+            console.error(
+                "There was a problem with the fetch operation:",
+                error
+            );
+        }
+    };
+
+    useEffect(() => {
+        users();
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -36,7 +57,21 @@ export default function Dashboard({ auth }) {
             .then((response) => {
                 console.log(response.data);
                 setOpenModal(false);
+                users();
                 // Atualize os dados da lista de usuários ou faça uma nova chamada para atualizá-la
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    const deleteUser = (id) => {
+        axios
+            .delete(`/usuarios/${id}`)
+            .then((response) => {
+                console.log(response.data);
+                setOpenModal(false);
+                users();
             })
             .catch((error) => {
                 console.error(error);
@@ -189,28 +224,23 @@ export default function Dashboard({ auth }) {
                                     </SecondaryButton>
                                 </div>
                             </ModalUser>
-                            <div
-                                className="flex overflow-x-auto flex-wrap justify-center -m-1"
-                                style={{ scrollbarWidth: "thin" }}
-                            >
-                                <div className="m-1">
-                                    <CardClient />
-                                </div>
-                                <div className="m-1">
-                                    <CardClient />
-                                </div>
-                                <div className="m-1">
-                                    <CardClient />
-                                </div>
-                                <div className="m-1">
-                                    <CardClient />
-                                </div>
-                                <div className="m-1">
-                                    <CardClient />
-                                </div>
-                                <div className="m-1">
-                                    <CardClient />
-                                </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 p-4">
+                                {clientes.map((cliente) => (
+                                    <div key={cliente.id} className="m-1">
+                                        <CardClient
+                                            nome={cliente.nome}
+                                            email={cliente.email}
+                                            cpf={cliente.cpf}
+                                            telefone={cliente.telefone}
+                                            animal={cliente.animal}
+                                            nomeanimal={cliente.nome_animal}
+                                            racaanimal={cliente.raca_animal}
+                                            servico={cliente.servico}
+                                            
+                                        />
+                                        <button onClick={() => deleteUser(cliente.id)}>Delete</button>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
