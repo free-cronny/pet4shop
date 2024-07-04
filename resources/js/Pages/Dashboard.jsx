@@ -15,7 +15,7 @@ export default function Dashboard({ auth }) {
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
-        cpf: 0,
+        cpf: "",
         telefone: "",
         animal: "",
         nome_animal: "",
@@ -23,25 +23,18 @@ export default function Dashboard({ auth }) {
         servico: "",
     });
 
-    const users = async () => {
-        const url = "http://localhost:8000/usuarios";
-        try {
-            const response = await fetch(url);
-            const clientes = await response.json();
-            setClientes(clientes);
+    useEffect(() => {
+        fetchClientes();
+    }, []);
 
-            console.log(clientes);
+    const fetchClientes = async () => {
+        try {
+            const response = await axios.get("http://localhost:8000/usuarios");
+            setClientes(response.data);
         } catch (error) {
-            console.error(
-                "There was a problem with the fetch operation:",
-                error
-            );
+            console.error("Erro ao buscar clientes:", error);
         }
     };
-
-    useEffect(() => {
-        users();
-    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -51,201 +44,150 @@ export default function Dashboard({ auth }) {
         });
     };
 
-    const handleSubmit = () => {
-        axios
-            .post("/usuarios", formData)
-            .then((response) => {
-                console.log(response.data);
-                setOpenModal(false);
-                users();
-                // Atualize os dados da lista de usuários ou faça uma nova chamada para atualizá-la
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    const handleSubmit = async () => {
+        try {
+            await axios.post("/usuarios", formData);
+            setOpenModal(false);
+            fetchClientes();
+        } catch (error) {
+            console.error("Erro ao adicionar cliente:", error);
+        }
     };
 
-    const deleteUser = (id) => {
-        axios
-            .delete(`/usuarios/${id}`)
-            .then((response) => {
-                console.log(response.data);
-                setOpenModal(false);
-                users();
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    const deleteUser = async (id) => {
+        try {
+            await axios.delete(`/usuarios/${id}`);
+            fetchClientes();
+        } catch (error) {
+            console.error("Erro ao excluir cliente:", error);
+        }
     };
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Dashboard
-                </h2>
-            }
-        >
+        <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
-
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div>
-                            <PrimaryButton
-                                className="bg-lime-500 hover:bg-green-700 focus:bg-lime-700 active:bg-emerald-900 "
-                                onClick={() => setOpenModal(true)}
-                            >
-                                Novo Cliente +
-                            </PrimaryButton>
-                            <ModalUser
-                                isOpen={openModal}
-                                setModalOpen={() => setOpenModal(!openModal)}
-                            >
-                                <h1 className="flex flex-col items-center justify-center text-2xl font-bold mb-5">
-                                    <span>Cadastrar</span>
-                                </h1>
-
-                                <div>
-                                    <InputLabel htmlFor="nome" value="Nome:" />
-                                    <TextInput
-                                        id="nome"
-                                        name="nome"
-                                        className="mt-3 block w-full"
-                                        value={formData.nome}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel
-                                        htmlFor="email"
-                                        value="Email:"
-                                    />
-                                    <TextInput
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        className="mt-3 block w-full"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel htmlFor="cpf" value="CPF:" />
-                                    <TextInput
-                                        id="cpf"
-                                        name="cpf"
-                                        type="number"
-                                        className="mt-3 block w-full"
-                                        value={formData.cpf}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel
-                                        htmlFor="telefone"
-                                        value="Número de telefone:"
-                                    />
-                                    <TextInput
-                                        id="telefone"
-                                        name="telefone"
-                                        className="mt-3 block w-full"
-                                        value={formData.telefone}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel
-                                        htmlFor="animal"
-                                        value="Animal:"
-                                    />
-                                    <TextInput
-                                        id="animal"
-                                        name="animal"
-                                        className="mt-3 block w-full"
-                                        value={formData.animal}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel
-                                        htmlFor="nome_animal"
-                                        value="Nome do Animal:"
-                                    />
-                                    <TextInput
-                                        id="nome_animal"
-                                        name="nome_animal"
-                                        className="mt-3 block w-full"
-                                        value={formData.nome_animal}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel
-                                        htmlFor="raca_animal"
-                                        value="Raça:"
-                                    />
-                                    <TextInput
-                                        id="raca_animal"
-                                        name="raca_animal"
-                                        className="mt-3 block w-full"
-                                        value={formData.raca_animal}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div>
-                                    <InputLabel
-                                        htmlFor="servico"
-                                        value="Serviço:"
-                                    />
-                                    <TextInput
-                                        id="servico"
-                                        name="servico"
-                                        className="mt-3 block w-full"
-                                        value={formData.servico}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className="flex flex-col items-center justify-center">
-                                    <SecondaryButton
-                                        className="mt-7 bg-lime-500 hover:bg-green-700 text-white"
-                                        onClick={handleSubmit}
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12">
+                <div className="bg-white overflow-hidden shadow sm:rounded-lg">
+                    <div className="p-6 bg-gray-100">
+                        <h2 className="text-3xl font-semibold text-gray-900 mb-6">Dashboard</h2>
+                        <PrimaryButton
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                            onClick={() => setOpenModal(true)}
+                        >
+                            Novo Cliente +
+                        </PrimaryButton>
+                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {clientes.map((cliente) => (
+                                <div key={cliente.id} className="bg-white shadow rounded-lg p-4">
+                                    <CardClient {...cliente} />
+                                    <button
+                                        className="mt-4 text-red-600 hover:text-red-800"
+                                        onClick={() => deleteUser(cliente.id)}
                                     >
-                                        Adicionar Novo Cliente
-                                    </SecondaryButton>
+                                        Excluir
+                                    </button>
                                 </div>
-                            </ModalUser>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 p-4">
-                                {clientes.map((cliente) => (
-                                    <div key={cliente.id} className="m-1">
-                                        <CardClient
-                                            nome={cliente.nome}
-                                            email={cliente.email}
-                                            cpf={cliente.cpf}
-                                            telefone={cliente.telefone}
-                                            animal={cliente.animal}
-                                            nomeanimal={cliente.nome_animal}
-                                            racaanimal={cliente.raca_animal}
-                                            servico={cliente.servico}
-                                            
-                                        />
-                                        <button onClick={() => deleteUser(cliente.id)}>Delete</button>
-                                    </div>
-                                ))}
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </div>
+            <ModalUser isOpen={openModal} setModalOpen={() => setOpenModal(!openModal)}>
+                <h1 className="text-2xl font-bold mb-5 text-gray-900">Cadastrar Cliente</h1>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                    <div>
+                        <InputLabel htmlFor="nome" value="Nome:" />
+                        <TextInput
+                            id="nome"
+                            name="nome"
+                            className="mt-1 block w-full"
+                            value={formData.nome}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <InputLabel htmlFor="email" value="Email:" />
+                        <TextInput
+                            id="email"
+                            name="email"
+                            type="email"
+                            className="mt-1 block w-full"
+                            value={formData.email}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <InputLabel htmlFor="cpf" value="CPF:" />
+                        <TextInput
+                            id="cpf"
+                            name="cpf"
+                            type="number"
+                            className="mt-1 block w-full"
+                            value={formData.cpf}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <InputLabel htmlFor="telefone" value="Número de telefone:" />
+                        <TextInput
+                            id="telefone"
+                            name="telefone"
+                            className="mt-1 block w-full"
+                            value={formData.telefone}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <InputLabel htmlFor="animal" value="Animal:" />
+                        <TextInput
+                            id="animal"
+                            name="animal"
+                            className="mt-1 block w-full"
+                            value={formData.animal}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <InputLabel htmlFor="nome_animal" value="Nome do Animal:" />
+                        <TextInput
+                            id="nome_animal"
+                            name="nome_animal"
+                            className="mt-1 block w-full"
+                            value={formData.nome_animal}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <InputLabel htmlFor="raca_animal" value="Raça:" />
+                        <TextInput
+                            id="raca_animal"
+                            name="raca_animal"
+                            className="mt-1 block w-full"
+                            value={formData.raca_animal}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div>
+                        <InputLabel htmlFor="servico" value="Serviço:" />
+                        <TextInput
+                            id="servico"
+                            name="servico"
+                            className="mt-1 block w-full"
+                            value={formData.servico}
+                            onChange={handleChange}
+                        />
+                    </div>
+                </div>
+                <div className="w-full flex justify-center">
+                    <SecondaryButton
+                        className="w-200 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg mt-4"
+                        onClick={handleSubmit}
+                    >
+                        Adicionar Novo Cliente
+                    </SecondaryButton>
+                </div>
+
+            </ModalUser>
         </AuthenticatedLayout>
     );
 }
