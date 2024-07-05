@@ -7,15 +7,14 @@ const InfoItem = ({ title, value }) => (
   </div>
 );
 
-export default function CardClient({ nome, email, cpf, telefone, animal, nomeanimal, racaanimal, servico }) {
+export default function CardClient({ nome, email, cpf, telefone, nome_animal, raca_animal, servico }) {
   const infoItems = [
     { title: "Nome", value: nome },
     { title: "Email", value: email },
     { title: "CPF", value: cpf },
     { title: "Telefone", value: telefone },
-    { title: "Animal", value: animal },
-    { title: "Nome do Animal", value: nomeanimal },
-    { title: "Raça", value: racaanimal },
+    { title: "Nome do Animal", value: nome_animal },
+    { title: "Raça", value: raca_animal },
     { title: "Serviço", value: servico }
   ];
 

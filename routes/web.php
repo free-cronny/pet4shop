@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Foundation\Application;
@@ -38,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/usuarios', [UsuarioController::class, 'index'])->name('users.index');
     Route::post('/usuarios', [UsuarioController::class, 'store']);
     Route::delete('/usuarios/{id}', [UsuarioController::class, 'delete']);
+
+    // cadastrar um animal
+    Route::get('/listarAnimaisDoUsuarioLogado', [AnimalController::class, 'listarAnimaisDoUsuarioLogado']);
+    Route::post('/criarAnimais', [AnimalController::class, 'store']);
 
 });
 
