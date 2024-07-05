@@ -29,8 +29,9 @@ export default function Dashboard({ auth }) {
 
     const fetchClientes = async () => {
         try {
-            const response = await axios.get("http://localhost:8000/usuarios");
+            const response = await axios.get("/listarAnimaisDoUsuarioLogado");
             setClientes(response.data);
+            console.log(response.data)
         } catch (error) {
             console.error("Erro ao buscar clientes:", error);
         }
@@ -46,7 +47,7 @@ export default function Dashboard({ auth }) {
 
     const handleSubmit = async () => {
         try {
-            await axios.post("/usuarios", formData);
+            await axios.post("/criarAnimais", formData);
             setOpenModal(false);
             fetchClientes();
         } catch (error) {
@@ -65,11 +66,11 @@ export default function Dashboard({ auth }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Dashboard" />
+            <Head title="Agenda" />
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12">
                 <div className="bg-white overflow-hidden shadow sm:rounded-lg">
                     <div className="p-6 bg-gray-100">
-                        <h2 className="text-3xl font-semibold text-gray-900 mb-6">Dashboard</h2>
+                        <h2 className="text-3xl font-semibold text-gray-900 mb-6">Agenda</h2>
                         <PrimaryButton
                             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
                             onClick={() => setOpenModal(true)}
