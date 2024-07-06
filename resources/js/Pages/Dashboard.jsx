@@ -4,6 +4,8 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import ModalUser from "@/Components/ModalUser";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
+import InputSelect from "@/Components/InputSelect";  // Adicione essa linha
+
 import SecondaryButton from "@/Components/SecondaryButton";
 import CardClient from "@/Components/CardClient";
 import axios from "axios";
@@ -22,6 +24,13 @@ export default function Dashboard({ auth }) {
         raca_animal: "",
         servico: "",
     });
+
+    const servicoOptions = [
+        { value: '', label: 'Selecione um serviço' },
+        { value: 'banho', label: 'Banho' },
+        { value: 'tosa', label: 'Tosa' },
+        { value: 'consulta', label: 'Consulta' },
+    ];
 
     useEffect(() => {
         fetchClientes();
@@ -170,12 +179,12 @@ export default function Dashboard({ auth }) {
                     </div>
                     <div>
                         <InputLabel htmlFor="servico" value="Serviço:" />
-                        <TextInput
+                        <InputSelect
                             id="servico"
                             name="servico"
-                            className="mt-1 block w-full"
                             value={formData.servico}
                             onChange={handleChange}
+                            options={servicoOptions}
                         />
                     </div>
                 </div>
@@ -187,7 +196,6 @@ export default function Dashboard({ auth }) {
                         Adicionar Novo Cliente
                     </SecondaryButton>
                 </div>
-
             </ModalUser>
         </AuthenticatedLayout>
     );
