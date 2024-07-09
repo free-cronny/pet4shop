@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 
 class AnimalController extends Controller
 {
-    // cadastrar um animal
+    // Cadastrar um animal
     public function store(Request $request)
     {
-
-        $request->validate([
+        $validatedData = $request->validate([
             'nome' => 'required|string|max:100',
+            'data' => 'required|string|max:100',
             'email' => 'required|email|max:100',
             'cpf' => 'required|string|max:11',
             'telefone' => 'required|string|max:11',
@@ -21,30 +21,56 @@ class AnimalController extends Controller
             'raca_animal' => 'required|string|max:100',
             'servico' => 'required|string|max:100',
         ]);
-        
-        $animal = new Animais();
-        $animal->nome = $request->nome;
-        $animal->email = $request->email;
-        $animal->cpf = $request->cpf;
-        $animal->telefone = $request->telefone;
-        $animal->nome_animal = $request->nome_animal;
-        $animal->raca_animal = $request->raca_animal;
-        $animal->servico = $request->servico;
-        $animal->user_id = auth()->user()->id;
-        $animal->save();
-        return response()->json($animal);
+
+        $animal = Animais::create([
+            'nome' => $validatedData['nome'],
+            'email' => $validatedData['email'],
+            'cpf' => $validatedData['cpf'],
+            'data' => $validatedData['data'],
+            'telefone' => $validatedData['telefone'],
+            'nome_animal' => $validatedData['nome_animal'],
+            'raca_animal' => $validatedData['raca_animal'],
+            'servico' => $validatedData['servico'],
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return response()->json($animal, 201);
     }
 
-    // listar todos os animais do usuário logado
+    // Listar todos os animais do usuário logado
     public function listarAnimaisDoUsuarioLogado()
     {
-        // se o role do usuario for admin, ele pode ver todos os animais se não apenas os dele
-        if (auth()->user()->role == 'admin') {
-            $animais = Animais::all();
-        } else {
-            $animais = Animais::where('user_id', auth()->user()->id)->get();
-        }
+        $animais = auth()->user()->role === 'admin' 
+            ? Animais::all()
+            : Animais::where('user_id', auth()->user()->id)->get();
+
         return response()->json($animais, 200);
     }
 
+    // Filtrar animais por vários campos
+    public function filtrarAnimais(Request $request)
+    {
+        $query = Animais::query();
+
+        $filters = [
+            'nome' => 'like',
+            'email' => 'like',
+            'data' => '=',
+            'cpf' => 'like',
+            'telefone' => 'like',
+            'nome_animal' => 'like',
+            'raca_animal' => 'like',
+            'servico' => '='
+        ];
+
+        foreach ($filters as $field => $operator) {
+            if ($request->filled($field)) {
+                $query->where($field, $operator === 'like' ? 'like' : '=', $operator === 'like' ? '%' . $request->$field . '%' : $request->$field);
+            }
+        }
+
+        $animais = $query->get();
+
+        return response()->json($animais, 200);
+    }
 }

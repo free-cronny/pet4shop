@@ -1,5 +1,11 @@
 import React from "react";
 
+// formata a data para o padrão brasileiro
+const formatDate = (date) => {
+  const [year, month, day] = date.split("-");
+  return `${day}/${month}/${year}`;
+};
+
 const InfoItem = ({ title, value }) => (
   <div className="flex justify-between items-center border-b-[2px] py-2">
     <h4 className="text-sm font-bold">{title}:</h4>
@@ -7,10 +13,11 @@ const InfoItem = ({ title, value }) => (
   </div>
 );
 
-export default function CardClient({ nome, email, cpf, telefone, nome_animal, raca_animal, servico }) {
+export default function CardClient({ nome, data, email, cpf, telefone, nome_animal, raca_animal, servico }) {
   const infoItems = [
     { title: "Nome", value: nome },
     { title: "Email", value: email },
+    {title: "Data", value: formatDate(data)},
     { title: "CPF", value: cpf },
     { title: "Telefone", value: telefone },
     { title: "Nome do Animal", value: nome_animal },

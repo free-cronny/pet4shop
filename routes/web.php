@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
     // cadastrar um animal
     Route::get('/listarAnimaisDoUsuarioLogado', [AnimalController::class, 'listarAnimaisDoUsuarioLogado']);
     Route::post('/criarAnimais', [AnimalController::class, 'store']);
+    Route::post('/filtrarAnimais', [AnimalController::class, 'filtrarAnimais']);
 
 });
 

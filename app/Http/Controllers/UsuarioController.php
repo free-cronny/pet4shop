@@ -19,6 +19,7 @@ class UsuarioController extends Controller
             $validatedData = $request->validate([
                 'nome' => 'required|string|max:100',
                 'email' => 'required|string|email|max:100',
+                'data' => 'required|string|max:100',
                 'cpf' => 'required|numeric',
                 'telefone' => 'required|numeric',
                 'animal' => 'required|string|max:100',
@@ -57,6 +58,7 @@ class UsuarioController extends Controller
             'nome_animal' => 'required|string|max:100',
             'raca_animal' => 'required|string|max:100',
             'servico' => 'required|string|max:100',
+            'data' => 'required|string|max:100',
         ]);
         $usuario->update($validatedData);
         return response()->json(['message' => 'Usuário atualizado com sucesso', 'date' => $usuario], 200);

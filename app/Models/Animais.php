@@ -12,6 +12,7 @@ class Animais extends Model
     protected $fillable = [
         'nome',
         'email',
+        'data',
         'cpf',
         'telefone',
         'nome_animal',
