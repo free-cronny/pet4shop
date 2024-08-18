@@ -36,9 +36,6 @@ class UsuarioController extends Controller
     public function delete($id)
     {
         $usuario = Usuario::find($id);
-        if(is_null($usuario)){
-            return response()->json(['message' => 'Usuário não encontrado'], 404);
-        }
         $usuario->delete();
         return response()->json(['message' => 'Usuário deletado com sucesso', 'user_name' => $usuario->nome], 200);
     }
