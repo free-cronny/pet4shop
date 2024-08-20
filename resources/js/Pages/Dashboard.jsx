@@ -53,7 +53,7 @@ export default function Dashboard({ auth }) {
     };
 
     const deleteUser = async (id) => {
-        try {
+        try { console.log(id)
             await axios.delete(`/usuarios/${id}`);
             fetchClientes();
         } catch (error) {
@@ -84,7 +84,7 @@ export default function Dashboard({ auth }) {
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-12">
                 <div className="bg-white overflow-hidden shadow sm:rounded-lg">
                     <div className="p-6 bg-gray-100">
-                        <h2 className="text-3xl font-semibold text-gray-900 mb-6">Agenda</h2>
+                        <h2 className="text-3xl font-semibold text-gray-900 mb-6">Dashboard</h2>
                         <PrimaryButton className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg" onClick={() => setOpenModal(true)}>Novo Cliente +</PrimaryButton>
                         <form onSubmit={handleFilter} className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                             {renderInput("nomeFilter", "nome", "text", "Filtrar por nome:")}
