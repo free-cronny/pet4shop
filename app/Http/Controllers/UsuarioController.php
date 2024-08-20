@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Animais;
 use Illuminate\Http\Request;
 use App\Models\Usuario;
 
@@ -35,7 +36,7 @@ class UsuarioController extends Controller
     // criar uma função para deletar um usuario em especifico passado na URL
     public function delete($id)
     {
-        $usuario = Usuario::find($id);
+        $usuario = Animais::find($id);
         if(is_null($usuario)){
             return response()->json(['message' => 'Usuário não encontrado'], 404);
         }
